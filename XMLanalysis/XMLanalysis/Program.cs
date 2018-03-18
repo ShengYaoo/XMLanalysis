@@ -22,6 +22,8 @@ namespace XMLanalysis   {
     class Program{
         static void Main(string[] args){
 
+
+
             
             
             var nodeList = new List<FarmTran>();
@@ -45,16 +47,7 @@ namespace XMLanalysis   {
                     item.transactionNum = getValue(node, "交易量");
                     return item;
                 }).ToList();
-            Console.WriteLine(nodeList[0].transactionDate);
-            Console.WriteLine(nodeList[0].cropCode);
-            Console.WriteLine(nodeList[0].cropName);
-            Console.WriteLine(nodeList[0].marketCode);
-            Console.WriteLine(nodeList[0].marketName);
-            Console.WriteLine(nodeList[0].priceHigh);
-            Console.WriteLine(nodeList[0].priceMid);
-            Console.WriteLine(nodeList[0].priceLow);
-            Console.WriteLine(nodeList[0].priceAvg);
-            Console.WriteLine(nodeList[0].transactionNum);
+            Display(nodeList);
             
 
             /*
@@ -78,23 +71,37 @@ namespace XMLanalysis   {
                     item.transactionNum = getValue(node, "交易量");
                     return item;
                 }).ToList();
-            Console.WriteLine(nodeList[0].transactionDate);
-            Console.WriteLine(nodeList[0].cropCode);
-            Console.WriteLine(nodeList[0].cropName);
-            Console.WriteLine(nodeList[0].marketCode);
-            Console.WriteLine(nodeList[0].marketName);
-            Console.WriteLine(nodeList[0].priceHigh);
-            Console.WriteLine(nodeList[0].priceMid);
-            Console.WriteLine(nodeList[0].priceLow);
-            Console.WriteLine(nodeList[0].priceAvg);
-            Console.WriteLine(nodeList[0].transactionNum);
+           
             */
             Console.ReadKey();
         }
 
-        private static string getValue(XElement node, string propertyName)
-        {
+        private static string getValue(XElement node, string propertyName) {
             return node.Element(propertyName)?.Value.Trim();
+        }
+        private static void Display(List<FarmTran> nodes) {
+                                         
+            nodes.GroupBy(node => node.marketName).ToList()
+                .ForEach(group => {
+                    var key = group.Key;
+                    var groupData = group.ToList();
+                    var message = $"市場名稱:{key},共有 {groupData.Count()}筆";
+                            
+                    Console.WriteLine(message);
+                    foreach (var item in groupData)
+                    {
+                        Console.WriteLine($"\t交易日期: {item.transactionDate}");
+                        Console.WriteLine($"\t作物代號: {item.cropCode}");
+                        Console.WriteLine($"\t作物名稱: {item.cropName}");
+                        Console.WriteLine($"\t上價: {item.priceHigh}");
+                        Console.WriteLine($"\t中價: {item.priceMid}");
+                        Console.WriteLine($"\t下價: {item.priceLow}");
+                        Console.WriteLine($"\t平均價: {item.priceAvg}");
+                        Console.WriteLine($"\t交易量: {item.transactionNum}");
+                        Console.WriteLine();
+                    }
+                });               
+                               
         }
     }
 }
