@@ -1,4 +1,6 @@
 ﻿using System;
+using OpenData;
+using mDB;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,19 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace XMLanalysis   {
-     class FarmTran{
-        
-        public string transactionDate{ get;set;}
-        public string cropCode { get; set; }
-        public string cropName { get; set; }
-        public string marketCode { get; set; }
-        public string marketName { get; set; }
-        public string priceHigh { get; set; }
-        public string priceMid { get; set; }
-        public string priceLow { get; set; }
-        public string priceAvg { get; set; }
-        public string transactionNum { get; set; }
-    }
+     
     class Program{
         static void Main(string[] args){
 
@@ -46,6 +36,7 @@ namespace XMLanalysis   {
                     item.priceAvg = getValue(node, "平均價");
                     item.transactionNum = getValue(node, "交易量");
                     return item;
+                    
                 }).ToList();
             Display(nodeList);
             
@@ -80,14 +71,25 @@ namespace XMLanalysis   {
             return node.Element(propertyName)?.Value.Trim();
         }
         private static void Display(List<FarmTran> nodes) {
-                                         
+            var mData = new DataTable();
+            nodes.ForEach(item =>
+            {
+                mData.InsertData(item);
+
+            });
+            
             nodes.GroupBy(node => node.marketName).ToList()
                 .ForEach(group => {
                     var key = group.Key;
                     var groupData = group.ToList();
                     var message = $"市場名稱:{key},共有 {groupData.Count()}筆";
-                            
+
+                   
+                  
+
+
                     Console.WriteLine(message);
+                    /*
                     foreach (var item in groupData)
                     {
                         Console.WriteLine($"\t交易日期: {item.transactionDate}");
@@ -100,6 +102,7 @@ namespace XMLanalysis   {
                         Console.WriteLine($"\t交易量: {item.transactionNum}");
                         Console.WriteLine();
                     }
+                    */
                 });               
                                
         }
