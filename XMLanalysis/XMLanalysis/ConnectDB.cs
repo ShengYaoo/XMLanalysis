@@ -14,6 +14,18 @@ namespace mDB
         private static int count = 0;
         SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=mDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         
+        public Boolean isEmpty() {
+            connection.Open();
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = string.Format("SELECT COUNT(*) FROM Farmtran");
+            int count =Convert.ToInt32(cmd.ExecuteScalar());  
+            connection.Close();
+            if (count > 0)
+                return false;
+            else
+                return true;
+        }
 
         public void InsertData(FarmTran item)
         {
@@ -30,7 +42,7 @@ namespace mDB
 
         }
         public void QueryData(string Row, string Name) {
-           connection.Open();
+            connection.Open();
             SqlCommand cmd = connection.CreateCommand();
             cmd.CommandType = System.Data.CommandType.Text;
             cmd.CommandText = string.Format($"SELECT * FROM FarmTran WHERE {Row}= N'{Name}' ");
