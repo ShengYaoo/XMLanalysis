@@ -103,7 +103,13 @@ namespace XMLanalysis   {
                         Console.WriteLine();
                     }
                     */
-                });               
+                });  
+            Console.WriteLine("請輸入要查詢的欄位資料");
+            Console.Write("欄位");
+            String Row = Console.ReadLine();
+            Console.Write("資料名稱");
+            String Name = Console.ReadLine();
+            mData.QueryData(Row, Name);
                                
         }
     }
