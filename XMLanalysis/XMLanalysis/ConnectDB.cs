@@ -12,14 +12,14 @@ namespace mDB
     {
 
         private static int count = 0;
-
+        SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=mDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         
 
-        internal void InsertData(FarmTran item)
+        public void InsertData(FarmTran item)
         {
             count += 1;
 
-            SqlConnection connection = new SqlConnection(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=mDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            
             connection.Open();
             SqlCommand cmd = connection.CreateCommand();
             cmd.CommandType = System.Data.CommandType.Text;
@@ -28,6 +28,26 @@ namespace mDB
             cmd.ExecuteNonQuery();
             connection.Close();
 
+        }
+        public void QueryData(string Row, string Name) {
+           connection.Open();
+            SqlCommand cmd = connection.CreateCommand();
+            cmd.CommandType = System.Data.CommandType.Text;
+            cmd.CommandText = string.Format($"SELECT * FROM FarmTran WHERE {Row}= N'{Name}' ");
+  
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            try{
+                while (reader.Read()){
+                    Console.WriteLine("Execute Query");
+                    Console.WriteLine(String.Format($"{reader[0]}, {reader[1]}, {reader[2]}, {reader[3]}, {reader[4]}, {reader[5]}"));
+                }
+            }
+            finally{
+                reader.Close();
+
+            }
+            connection.Close();
         }
     }
 }
